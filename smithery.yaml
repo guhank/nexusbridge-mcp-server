@@ -1,32 +1,4 @@
-# Smithery configuration file: https://smithery.ai/docs/build/project-config
-startCommand:
-  type: stdio
-  configSchema:
-    # JSON Schema defining the configuration options for the MCP
-    type: object
-    required:
-      - nexusbridgeApiKey
-    properties:
-      nexusbridgeApiKey:
-        type: string
-        title: "NexusBridge API Key"
-        description: "Your NexusBridge API key (starts with nb_sk_). Get one at https://nexusbridge.io"
-      nexusbridgeBaseUrl:
-        type: string
-        title: "NexusBridge Base URL"
-        description: "Base URL of NexusBridge instance (default: https://nexusbridge.io)"
-        default: "https://nexusbridge.io"
-  commandFunction:
-    # A function that produces the CLI command to start the MCP on stdio
-    |-
-    (config) => ({
-      command: 'npx',
-      args: ['tsx', 'index.ts'],
-      env: {
-        NEXUSBRIDGE_API_KEY: config.nexusbridgeApiKey,
-        NEXUSBRIDGE_BASE_URL: config.nexusbridgeBaseUrl || 'https://nexusbridge.io'
-      }
-    })
-  exampleConfig:
-    nexusbridgeApiKey: "nb_sk_your_api_key_here"
-    nexusbridgeBaseUrl: "https://nexusbridge.io"
+version: 1
+start:
+  command: ["npx", "tsx", "index.ts"]
+  port: 8000
