@@ -23,7 +23,7 @@ import { z } from "zod";
 import { createServer } from "http";
 
 const API_KEY = process.env.NEXUSBRIDGE_API_KEY || "";
-const BASE_URL = (process.env.NEXUSBRIDGE_BASE_URL || "https://nexusbridge.io").replace(/\/$/, "");
+const BASE_URL = (process.env.NEXUSBRIDGE_BASE_URL || "https://syntss.com").replace(/\/$/, "");
 const PORT = parseInt(process.env.PORT || "8000", 10);
 
 if (!API_KEY) {
