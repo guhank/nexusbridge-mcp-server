@@ -55,7 +55,7 @@ Add to `claude_desktop_config.json`:
       "args": ["tsx", "/path/to/nexusbridge-mcp-server/index.ts", "--stdio"],
       "env": {
         "NEXUSBRIDGE_API_KEY": "nb_sk_your_key_here",
-        "NEXUSBRIDGE_BASE_URL": "https://nexusbridge.io"
+        "NEXUSBRIDGE_BASE_URL": "https://syntss.com"
       }
     }
   }
@@ -67,7 +67,7 @@ Add to `claude_desktop_config.json`:
 docker build -t nexusbridge-mcp .
 docker run -p 8000:8000 \
   -e NEXUSBRIDGE_API_KEY=nb_sk_your_key \
-  -e NEXUSBRIDGE_BASE_URL=https://nexusbridge.io \
+  -e NEXUSBRIDGE_BASE_URL=https://syntss.com \
   nexusbridge-mcp
 ```
 
@@ -84,7 +84,7 @@ NEXUSBRIDGE_API_KEY=nb_sk_your_key npm start
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `NEXUSBRIDGE_API_KEY` | Yes | — | Your NexusBridge API key |
-| `NEXUSBRIDGE_BASE_URL` | No | `https://nexusbridge.io` | Base URL of NexusBridge |
+| `NEXUSBRIDGE_BASE_URL` | No | `https://syntss.com` | Base URL of NexusBridge |
 | `PORT` | No | `8000` | HTTP port (Smithery mode) |
 
 ## Transport Modes
