@@ -1,4 +1,32 @@
-version: 1
-start:
-  command: ["npx", "tsx", "index.ts"]
-  port: 8000
+runtime: "container"
+
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."
+
+startCommand:
+  type: "http"
+  configSchema:
+    type: "object"
+    required:
+      - apiKey
+    properties:
+      apiKey:
+        type: "string"
+        description: "Your NexusBridge API key (starts with nb_sk_)"
+      baseUrl:
+        type: "string"
+        description: "NexusBridge API base URL (default: https://syntss.com)"
+  commandFunction: |-
+    (config) => ({
+      command: 'npx',
+      args: ['tsx', 'index.ts'],
+      env: {
+        NEXUSBRIDGE_API_KEY: config.apiKey,
+        NEXUSBRIDGE_BASE_URL: config.baseUrl || 'https://syntss.com',
+        PORT: '8000'
+      }
+    })
+  exampleConfig:
+    apiKey: "nb_sk_your_api_key_here"
+    baseUrl: "https://syntss.com"
