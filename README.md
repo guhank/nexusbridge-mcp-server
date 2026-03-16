@@ -31,13 +31,8 @@ Execute any service. Credits are deducted automatically.
 
 **Examples:**
 ```json
-// LLM Chat
 { "slug": "llm-chat", "params": { "messages": [{"role": "user", "content": "Hello"}] } }
-
-// Sentiment Analysis
 { "slug": "sentiment", "params": { "text": "I love this product!" } }
-
-// Web Search
 { "slug": "web-search", "params": { "query": "latest AI news" } }
 ```
 
@@ -46,12 +41,10 @@ Check your current credit balance.
 
 ## Setup
 
-### Get an API Key
-1. Visit [NexusBridge](https://nexusbridge.io)
-2. Create an API key from the dashboard
-3. Buy credits via Stripe checkout
+### Smithery (Hosted)
+This server is available on [Smithery](https://smithery.ai). Search for "nexusbridge" and configure your API key. Smithery handles deployment via Docker.
 
-### Claude Desktop
+### Claude Desktop (Local)
 Add to `claude_desktop_config.json`:
 
 ```json
@@ -59,7 +52,7 @@ Add to `claude_desktop_config.json`:
   "mcpServers": {
     "nexusbridge": {
       "command": "npx",
-      "args": ["tsx", "/path/to/nexusbridge-mcp-server/index.ts"],
+      "args": ["tsx", "/path/to/nexusbridge-mcp-server/index.ts", "--stdio"],
       "env": {
         "NEXUSBRIDGE_API_KEY": "nb_sk_your_key_here",
         "NEXUSBRIDGE_BASE_URL": "https://nexusbridge.io"
@@ -69,12 +62,18 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
-### Smithery
-This server is available on [Smithery](https://smithery.ai). Search for "nexusbridge" and configure your API key.
-
-### Manual Installation
+### Docker
 ```bash
-git clone https://github.com/YOUR_USERNAME/nexusbridge-mcp-server.git
+docker build -t nexusbridge-mcp .
+docker run -p 8000:8000 \
+  -e NEXUSBRIDGE_API_KEY=nb_sk_your_key \
+  -e NEXUSBRIDGE_BASE_URL=https://nexusbridge.io \
+  nexusbridge-mcp
+```
+
+### Manual
+```bash
+git clone https://github.com/guhank/nexusbridge-mcp-server.git
 cd nexusbridge-mcp-server
 npm install
 NEXUSBRIDGE_API_KEY=nb_sk_your_key npm start
@@ -86,10 +85,12 @@ NEXUSBRIDGE_API_KEY=nb_sk_your_key npm start
 |----------|----------|---------|-------------|
 | `NEXUSBRIDGE_API_KEY` | Yes | — | Your NexusBridge API key |
 | `NEXUSBRIDGE_BASE_URL` | No | `https://nexusbridge.io` | Base URL of NexusBridge |
+| `PORT` | No | `8000` | HTTP port (Smithery mode) |
 
-## How It Works
+## Transport Modes
 
-NexusBridge operates as an API brokerage — a single unified endpoint that routes requests to the best upstream providers (OpenRouter for AI models, specialized APIs for tools). You pay per call with credits, and NexusBridge handles routing, failover, and billing.
+- **HTTP** (default): Runs an HTTP server on `PORT` for Smithery hosted deployment
+- **stdio**: Pass `--stdio` flag for local use with Claude Desktop
 
 ## License
 
