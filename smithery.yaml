@@ -13,10 +13,13 @@ startCommand:
     properties:
       apiKey:
         type: "string"
-        description: "Your NexusBridge API key (starts with nb_sk_)"
+        title: "NexusBridge API Key"
+        description: "Your NexusBridge API key (starts with nb_sk_). Get one at https://syntss.com"
       baseUrl:
         type: "string"
-        description: "NexusBridge API base URL (default: https://syntss.com)"
+        title: "API Base URL"
+        description: "NexusBridge API base URL. Only change this if you're running a self-hosted instance."
+        default: "https://syntss.com"
   commandFunction: |-
     (config) => ({
       command: 'npx',

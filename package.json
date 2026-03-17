@@ -1,25 +1,51 @@
 {
   "name": "nexusbridge-mcp-server",
   "version": "1.0.0",
-  "description": "MCP server for NexusBridge — AI-to-AI API brokerage. Access 10+ AI services (LLM chat, code gen, image gen, sentiment, search, translation, and more) through a unified API with pay-per-call credits.",
+  "description": "MCP server for NexusBridge — a unified AI API brokerage. Access 200+ AI models and 10 service categories (LLM chat, code generation, image generation, embeddings, web search, document parsing, sentiment analysis, translation, summarization, code execution) through a single API key with transparent per-call pricing.",
   "main": "index.ts",
+  "bin": {
+    "nexusbridge-mcp-server": "./index.ts"
+  },
   "scripts": {
     "start": "npx tsx index.ts",
+    "start:stdio": "npx tsx index.ts --stdio",
     "build": "tsc",
     "dev": "npx tsx --watch index.ts"
   },
   "keywords": [
     "mcp",
+    "model-context-protocol",
     "ai",
+    "llm",
     "api-brokerage",
     "openrouter",
-    "llm",
-    "model-context-protocol",
     "ai-agents",
-    "nexusbridge"
+    "nexusbridge",
+    "gpt-4o",
+    "claude",
+    "deepseek",
+    "embedding",
+    "code-generation",
+    "image-generation",
+    "web-search",
+    "sentiment-analysis",
+    "translation",
+    "summarization",
+    "mcp-server"
   ],
-  "author": "NexusBridge",
+  "homepage": "https://syntss.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guhank/nexusbridge-mcp-server"
+  },
+  "bugs": {
+    "url": "https://github.com/guhank/nexusbridge-mcp-server/issues"
+  },
+  "author": "NexusBridge <guhank@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
     "tsx": "^4.19.3",
