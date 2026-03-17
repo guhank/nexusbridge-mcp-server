@@ -8,8 +8,6 @@ startCommand:
   type: "http"
   configSchema:
     type: "object"
-    required:
-      - apiKey
     properties:
       apiKey:
         type: "string"
@@ -25,7 +23,7 @@ startCommand:
       command: 'node',
       args: ['dist/index.js'],
       env: {
-        NEXUSBRIDGE_API_KEY: config.apiKey,
+        NEXUSBRIDGE_API_KEY: config.apiKey || '',
         NEXUSBRIDGE_BASE_URL: config.baseUrl || 'https://syntss.com',
         PORT: '8000'
       }

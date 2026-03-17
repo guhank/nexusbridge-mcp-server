@@ -27,8 +27,7 @@ const BASE_URL = (process.env.NEXUSBRIDGE_BASE_URL || "https://syntss.com").repl
 const PORT = parseInt(process.env.PORT || "8000", 10);
 
 if (!API_KEY) {
-  console.error("Error: NEXUSBRIDGE_API_KEY environment variable is required.");
-  process.exit(1);
+  console.warn("Warning: NEXUSBRIDGE_API_KEY environment variable is not set. Tools will return an error until an API key is configured.");
 }
 
 async function apiCall(endpoint: string, body?: Record<string, unknown>) {
@@ -56,6 +55,7 @@ function createMcpServer(): McpServer {
     "nexusbridge_catalog",
     "Retrieve the full NexusBridge service catalog. Returns every available service with its slug, name, category, description, and per-call price in USD. Also returns your current credit balance. Call this tool first before executing any service to discover what is available and confirm you have sufficient credits. The response includes an array of service objects and a creditBalance number.",
     {},
+    { title: "List Service Catalog", readOnlyHint: true, idempotentHint: true, openWorldHint: true },
     async () => {
       try {
         const data = await apiCall("/catalog");
@@ -98,6 +98,7 @@ function createMcpServer(): McpServer {
           "Service-specific parameters as a JSON object. For 'llm-chat': {messages: [{role: 'user', content: '...'}], model?: 'deepseek/deepseek-chat-v3-0324', max_tokens?: 1024}. For 'sentiment': {text: '...'}. For 'web-search': {query: '...'}. For 'summarize': {text: '...'}. For 'translation': {text: '...', from?: 'auto', to: 'en'}. For 'llm-code': {prompt: '...', model?: '...'}. For 'image-gen': {prompt: '...'}. For 'text-embedding': {text: '...'}. For 'doc-parser': {text: '...' or url: '...'}. For 'code-exec': {language: 'python', code: '...'}. Omit or pass {} to use defaults."
         ),
     },
+    { title: "Execute AI Service", readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: true },
     async ({ slug, params }) => {
       try {
         const data = await apiCall("/execute", { slug, params: params || {} });
@@ -128,6 +129,7 @@ function createMcpServer(): McpServer {
     "nexusbridge_balance",
     "Check your current NexusBridge credit balance in USD and the number of active services available. Use this tool to verify you have enough credits before executing expensive operations, or to monitor spending after a batch of calls. Returns creditBalance (number in USD) and serviceCount (integer).",
     {},
+    { title: "Check Credit Balance", readOnlyHint: true, idempotentHint: true, openWorldHint: true },
     async () => {
       try {
         const data = await apiCall("/catalog");
@@ -158,6 +160,87 @@ function createMcpServer(): McpServer {
         };
       }
     }
+  );
+
+  // Prompt: How to use NexusBridge
+  server.prompt(
+    "use_nexusbridge",
+    "A step-by-step guide for using NexusBridge to access 200+ AI models and services through a single API key.",
+    async () => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: "How do I use NexusBridge to call AI services?",
+          },
+        },
+        {
+          role: "assistant" as const,
+          content: {
+            type: "text" as const,
+            text: `# Using NexusBridge
+
+NexusBridge gives you access to 200+ AI models and 10 service categories through a single API key.
+
+## Step 1: Discover available services
+Call \`nexusbridge_catalog\` to get the full list of services and your current credit balance.
+
+## Step 2: Execute a service
+Call \`nexusbridge_execute\` with the service slug and parameters. Examples:
+
+**Chat with an AI model:**
+\`\`\`
+slug: "llm-chat"
+params: { messages: [{ role: "user", content: "Hello!" }], model: "deepseek/deepseek-chat-v3-0324" }
+\`\`\`
+
+**Search the web:**
+\`\`\`
+slug: "web-search"
+params: { query: "latest AI news" }
+\`\`\`
+
+**Generate an image:**
+\`\`\`
+slug: "image-gen"
+params: { prompt: "a futuristic bridge connecting two AI nodes" }
+\`\`\`
+
+## Step 3: Check your balance
+Call \`nexusbridge_balance\` to monitor your remaining credits.
+
+## Available service categories
+llm-chat, llm-code, image-gen, text-embedding, web-search, doc-parser, sentiment, translation, summarize, code-exec
+
+Get your API key at https://syntss.com`,
+          },
+        },
+      ],
+    })
+  );
+
+  // Prompt: Execute a specific AI service
+  server.prompt(
+    "execute_service",
+    "Prompt template for executing a specific NexusBridge AI service by category.",
+    {
+      service: z.string().describe("The type of AI service to use (e.g. llm-chat, image-gen, web-search, sentiment, translation, summarize, code-exec)"),
+      input: z.string().describe("The input text or query for the service"),
+    },
+    async ({ service, input }) => ({
+      messages: [
+        {
+          role: "user" as const,
+          content: {
+            type: "text" as const,
+            text: `Use NexusBridge to run the "${service}" service with this input: ${input}
+
+First call nexusbridge_catalog to confirm the service is available and check your balance. Then call nexusbridge_execute with slug="${service}" and the appropriate params object for the input provided.`,
+          },
+        },
+      ],
+    })
   );
 
   return server;
