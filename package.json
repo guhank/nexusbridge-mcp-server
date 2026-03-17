@@ -2,16 +2,23 @@
   "name": "nexusbridge-mcp-server",
   "version": "1.0.0",
   "description": "MCP server for NexusBridge — a unified AI API brokerage. Access 200+ AI models and 10 service categories (LLM chat, code generation, image generation, embeddings, web search, document parsing, sentiment analysis, translation, summarization, code execution) through a single API key with transparent per-call pricing.",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "bin": {
-    "nexusbridge-mcp-server": "./index.ts"
+    "nexusbridge-mcp-server": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "smithery.yaml"
+  ],
   "scripts": {
-    "start": "npx tsx index.ts",
-    "start:stdio": "npx tsx index.ts --stdio",
+    "start": "node dist/index.js",
+    "start:stdio": "node dist/index.js --stdio",
     "build": "tsc",
+    "prepublishOnly": "npm run build",
     "dev": "npx tsx --watch index.ts"
   },
+  "type": "commonjs",
   "keywords": [
     "mcp",
     "model-context-protocol",
@@ -48,7 +55,6 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
-    "tsx": "^4.19.3",
     "zod": "^3.24.4"
   },
   "devDependencies": {

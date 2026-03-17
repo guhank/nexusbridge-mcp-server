@@ -2,15 +2,18 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Install dependencies
-COPY package.json ./
-RUN npm install --production
+# Install all dependencies (including devDependencies for tsx + tsc)
+COPY package.json tsconfig.json ./
+RUN npm install
 
 # Copy source
 COPY . .
+
+# Build TypeScript to JavaScript
+RUN npm run build
 
 # Expose port for Smithery HTTP transport
 EXPOSE 8000
 
 # Start in HTTP mode (Smithery connects via HTTP)
-CMD ["npx", "tsx", "index.ts"]
+CMD ["node", "dist/index.js"]

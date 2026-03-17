@@ -22,8 +22,8 @@ startCommand:
         default: "https://syntss.com"
   commandFunction: |-
     (config) => ({
-      command: 'npx',
-      args: ['tsx', 'index.ts'],
+      command: 'node',
+      args: ['dist/index.js'],
       env: {
         NEXUSBRIDGE_API_KEY: config.apiKey,
         NEXUSBRIDGE_BASE_URL: config.baseUrl || 'https://syntss.com',
